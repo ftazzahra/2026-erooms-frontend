@@ -1,8 +1,14 @@
 import DashboardLayout from "../../components/layouts/DashboardLayout";
 import { useEffect, useState } from "react";
 
+interface Booking {
+  id: number;
+  status: "Pending" | "Approved" | "Rejected";
+}
+
 const UserDashboard = () => {
   const [username, setUsername] = useState("User");
+  const [bookings, setBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -20,15 +26,37 @@ const UserDashboard = () => {
         setUsername("User");
       }
     }
+
+    // Fetch bookings
+    const fetchBookings = async () => {
+      if (!token) return;
+      try {
+        const res = await fetch("http://localhost:5006/api/Bookings/my", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("Failed to fetch bookings");
+        const data: Booking[] = await res.json();
+        setBookings(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchBookings();
   }, []);
+
+  // Hitung status
+  const total = bookings.length;
+  const pending = bookings.filter((b) => b.status === "Pending").length;
+  const approved = bookings.filter((b) => b.status === "Approved").length;
+  const rejected = bookings.filter((b) => b.status === "Rejected").length;
 
   return (
     <DashboardLayout allowedRole="User">
-      {/* ===== WELCOME CARD ===== */}
       <div
         className="card border-0 mb-4"
         style={{
-          background: "rgba(255, 193, 7, 0.25)",
+          background: "rgba(173, 216, 230, 0.25)", 
           backdropFilter: "blur(4px)",
         }}
       >
@@ -38,25 +66,23 @@ const UserDashboard = () => {
         </div>
       </div>
 
-      {/* ===== ROW 1 ===== */}
       <div className="row g-4 mb-2">
         <div className="col-md-12">
           <div className="card shadow-sm border-0">
             <div className="card-body">
               <h6 className="text-muted mb-1">Total My Bookings</h6>
-              <h3 className="fw-bold mb-0">12</h3>
+              <h3 className="fw-bold mb-0">{total}</h3>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ===== ROW 2 ===== */}
       <div className="row g-4">
         <div className="col-md-4">
           <div className="card shadow-sm border-0">
             <div className="card-body">
               <h6 className="text-muted mb-1">Pending Bookings</h6>
-              <h4 className="fw-bold text-warning mb-0">3</h4>
+              <h4 className="fw-bold text-warning mb-0">{pending}</h4>
             </div>
           </div>
         </div>
@@ -65,7 +91,7 @@ const UserDashboard = () => {
           <div className="card shadow-sm border-0">
             <div className="card-body">
               <h6 className="text-muted mb-1">Approved Bookings</h6>
-              <h4 className="fw-bold text-success mb-0">7</h4>
+              <h4 className="fw-bold text-success mb-0">{approved}</h4>
             </div>
           </div>
         </div>
@@ -74,7 +100,7 @@ const UserDashboard = () => {
           <div className="card shadow-sm border-0">
             <div className="card-body">
               <h6 className="text-muted mb-1">Rejected Bookings</h6>
-              <h4 className="fw-bold text-danger mb-0">2</h4>
+              <h4 className="fw-bold text-danger mb-0">{rejected}</h4>
             </div>
           </div>
         </div>
