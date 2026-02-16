@@ -1,7 +1,36 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const getTitle = () => {
+    switch (location.pathname) {
+      case "/admin/dashboard":
+        return "Dashboard";
+
+      case "/admin/rooms":
+        return "Rooms";
+
+      case "/admin/bookings":
+        return "Bookings";
+
+      case "/admin/history":
+        return "History";
+
+      case "/user/dashboard":
+        return "User Dashboard";
+
+      case "/user/bookings":
+        return "Bookings";
+
+    case "/user/history":
+        return "History";
+
+      default:
+        return "Dashboard";
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
