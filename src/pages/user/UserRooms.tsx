@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/layouts/DashboardLayout";
-import { InputGroup, FormControl, Dropdown } from "react-bootstrap";
+import {
+  InputGroup,
+  FormControl,
+  Row,
+  Col,
+} from "react-bootstrap";
 
 interface Room {
   id: number;
@@ -21,13 +26,16 @@ interface BookingRequestDto {
 const UserRooms = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"All" | "Available" | "Not Available">("All");
+  const [statusFilter, setStatusFilter] =
+    useState<"All" | "Available" | "Not Available">("All");
+
   const [showModal, setShowModal] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [borrowDate, setBorrowDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
   const [purpose, setPurpose] = useState("");
-  const [username, setUsername] = useState("User"); // Ambil dari JWT
+  const [username, setUsername] = useState("User");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,11 +44,12 @@ const UserRooms = () => {
         const token = localStorage.getItem("token");
         if (!token) return;
 
-        // Decode JWT untuk ambil username
         try {
           const payload = JSON.parse(atob(token.split(".")[1]));
           setUsername(
-            payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || "User"
+            payload[
+              "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+            ] || "User"
           );
         } catch {
           setUsername("User");
@@ -49,7 +58,9 @@ const UserRooms = () => {
         const res = await fetch("http://localhost:5006/api/Rooms", {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         if (!res.ok) throw new Error("Failed to fetch rooms");
+
         const data = await res.json();
         setRooms(data);
       } catch (err) {
@@ -73,6 +84,7 @@ const UserRooms = () => {
 
     try {
       const token = localStorage.getItem("token");
+
       const payload: BookingRequestDto = {
         roomId: selectedRoom.id,
         borrowDate,
@@ -99,7 +111,7 @@ const UserRooms = () => {
     }
   };
 
-  // Filter berdasarkan search + status
+  // FILTER
   const filteredRooms = rooms.filter((room) => {
     const matchesSearch =
       room.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -117,17 +129,22 @@ const UserRooms = () => {
 
   return (
     <DashboardLayout allowedRole="User">
+      {/* HEADER + DESCRIPTION */}
       <div
-        className="mb-4 p-3 rounded d-flex flex-row justify-content-between align-items-center"
+        className="mb-3 p-3 rounded"
         style={{
           backgroundColor: "rgba(173, 216, 230, 0.3)",
           color: "#0b3a82",
         }}
       >
-        <h5 className="mb-0">Room List</h5>
-        <div className="d-flex gap-2">
-          {/* Search */}
-          <InputGroup style={{ maxWidth: "200px" }}>
+        <h5 className="mb-1">Room List</h5>
+        <em>Browse available rooms and request a loan.</em>
+      </div>
+
+      {/* SEARCH + FILTER */}
+      <Row className="mb-3 align-items-center">
+        <Col md={8}>
+          <InputGroup>
             <InputGroup.Text>🔍</InputGroup.Text>
             <FormControl
               placeholder="Search rooms..."
@@ -135,20 +152,27 @@ const UserRooms = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </InputGroup>
+        </Col>
 
-        <Dropdown>
-            <Dropdown.Toggle variant="secondary">Filter</Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={() => setStatusFilter("All")}>All</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter("Available")}>Available</Dropdown.Item>
-              <Dropdown.Item onClick={() => setStatusFilter("Not Available")}>Not Available</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+        {/* ✅ FILTER DIGANTI DI SINI SAJA */}
+        <Col md={4}>
+          <select
+            className="form-select"
+            value={statusFilter}
+            onChange={(e) =>
+              setStatusFilter(
+                e.target.value as "All" | "Available" | "Not Available"
+              )
+            }
+          >
+            <option value="All">All</option>
+            <option value="Available">Available</option>
+            <option value="Not Available">Not Available</option>
+          </select>
+        </Col>
+      </Row>
 
-        </div>
-      </div>
-
-      {/* Tabel room */}
+      {/* TABLE */}
       <div className="table-responsive shadow rounded overflow-hidden">
         <table className="table align-middle mb-0">
           <thead>
@@ -161,10 +185,12 @@ const UserRooms = () => {
               <th className="text-center">Action</th>
             </tr>
           </thead>
+
           <tbody>
             {filteredRooms.length > 0 ? (
               filteredRooms.map((room, index) => {
                 const isAvailable = room.isAvailable;
+
                 return (
                   <tr
                     key={room.id}
@@ -181,13 +207,19 @@ const UserRooms = () => {
                     <td className="fw-semibold">{room.name}</td>
                     <td>{room.location}</td>
                     <td>{room.capacity}</td>
+
                     <td>
                       {isAvailable ? (
-                        <span className="text-success fw-semibold">Available</span>
+                        <span className="text-success fw-semibold">
+                          Available
+                        </span>
                       ) : (
-                        <span className="text-secondary fw-semibold">Not Available</span>
+                        <span className="text-secondary fw-semibold">
+                          Not Available
+                        </span>
                       )}
                     </td>
+
                     <td className="text-center">
                       {isAvailable ? (
                         <button
@@ -197,7 +229,10 @@ const UserRooms = () => {
                           📅 Request Loan
                         </button>
                       ) : (
-                        <button className="btn btn-secondary btn-sm" disabled>
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          disabled
+                        >
                           Unavailable
                         </button>
                       )}
@@ -216,7 +251,7 @@ const UserRooms = () => {
         </table>
       </div>
 
-      {/* Modal */}
+      {/* MODAL (TIDAK DIUBAH) */}
       {showModal && selectedRoom && (
         <div
           className="modal fade show d-block"
@@ -233,65 +268,64 @@ const UserRooms = () => {
                   onClick={() => setShowModal(false)}
                 />
               </div>
-              <div className="modal-body">
-                <div className="row">
-                  {/* Kolom kiri */}
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Borrower's Name</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={username}
-                        disabled
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label className="form-label">Room Name</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={selectedRoom.name}
-                        disabled
-                      />
-                    </div>
-                  </div>
 
-                  {/* Kolom kanan */}
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Borrow Date</label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        value={borrowDate}
-                        onChange={(e) => setBorrowDate(e.target.value)}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label className="form-label">Return Date</label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        value={returnDate}
-                        onChange={(e) => setReturnDate(e.target.value)}
-                      />
-                    </div>
-                  </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label className="form-label">
+                    Borrower's Name
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={username}
+                    disabled
+                  />
                 </div>
 
-                {/* Description full width */}
+                <div className="mb-3">
+                  <label className="form-label">Room Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={selectedRoom.name}
+                    disabled
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Borrow Date</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={borrowDate}
+                    onChange={(e) => setBorrowDate(e.target.value)}
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Return Date</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={returnDate}
+                    onChange={(e) => setReturnDate(e.target.value)}
+                  />
+                </div>
+
                 <div className="mb-3">
                   <label className="form-label">Description</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Fill with the purpose of borrowing a room"
+                    placeholder="Purpose of borrowing a room"
                     value={purpose}
-                    onChange={(e) => setPurpose(e.target.value)}
+                    onChange={(e) =>
+                      setPurpose(e.target.value)
+                    }
                   />
                 </div>
               </div>
+
               <div className="modal-footer">
                 <button
                   className="btn btn-secondary"
@@ -299,6 +333,7 @@ const UserRooms = () => {
                 >
                   Close
                 </button>
+
                 <button
                   className="btn btn-primary"
                   onClick={handleSubmitBooking}

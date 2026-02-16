@@ -11,7 +11,7 @@ import {
   FormControl,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { FiEdit, FiTrash2, FiFileText, FiInfo } from "react-icons/fi"; // import ikon
+import { FiEdit, FiTrash2, FiInfo } from "react-icons/fi";
 
 interface Booking {
   id: number;
@@ -31,13 +31,8 @@ const UserBookings = () => {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [search, setSearch] = useState("");
 
-  // modal edit
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editData, setEditData] = useState<{
-    borrowDate: string;
-    returnDate: string;
-    purpose: string;
-  }>({
+  const [editData, setEditData] = useState({
     borrowDate: "",
     returnDate: "",
     purpose: "",
@@ -98,23 +93,27 @@ const UserBookings = () => {
   const handleEditSubmit = async () => {
     if (!selectedBooking) return;
     try {
-      const res = await fetch(`http://localhost:5006/api/bookings/${selectedBooking.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          roomId: selectedBooking.roomId,
-          borrowDate: editData.borrowDate,
-          returnDate: editData.returnDate,
-          purpose: editData.purpose,
-        }),
-      });
+      const res = await fetch(
+        `http://localhost:5006/api/bookings/${selectedBooking.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            roomId: selectedBooking.roomId,
+            borrowDate: editData.borrowDate,
+            returnDate: editData.returnDate,
+            purpose: editData.purpose,
+          }),
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to update booking");
       alert("Booking updated successfully");
       setShowEditModal(false);
+      fetchBookings();
     } catch (err) {
       console.error(err);
       alert("Error updating booking");
@@ -127,26 +126,18 @@ const UserBookings = () => {
 
   return (
     <DashboardLayout allowedRole="User">
-      {/* Header halaman */}
+      {/* header */}
       <div
-        className="mb-3 p-3 rounded d-flex justify-content-between align-items-center"
+        className="mb-4 p-3 rounded"
         style={{
           backgroundColor: "rgba(173, 216, 230, 0.3)",
           color: "#0b3a82",
         }}
       >
-        <h5 className="mb-0">My Bookings</h5>
-        <InputGroup className="w-auto" style={{ maxWidth: "300px" }}>
-          <InputGroup.Text>🔍</InputGroup.Text>
-          <FormControl
-            placeholder="Search room..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </InputGroup>
+        <h5 className="mb-1">My Bookings</h5>
+        <em>View and manage your pending room bookings.</em>
       </div>
 
-      {/* Card info */}
       <Card
         className="mb-3 p-3"
         style={{
@@ -155,7 +146,7 @@ const UserBookings = () => {
           border: "none",
         }}
       >
-        <p className="mb-0">
+        <em className="mb-0">
           - For Approved/Rejected bookings, check the{" "}
           <Link
             to="/user/history"
@@ -164,15 +155,26 @@ const UserBookings = () => {
             History
           </Link>{" "}
           page.
-        </p>
-        <p className="mb-0">
-           - Please refresh after the data is updated.
-        </p>
+        </em>
+        <em className="mb-0">
+          - Please refresh after the data is updated.
+        </em>
       </Card>
 
       <Row>
-        {/* Tabel kiri */}
         <Col md={5}>
+          {/* updated search input in here */}
+          <div className="mb-3">
+            <InputGroup>
+              <InputGroup.Text>🔍</InputGroup.Text>
+              <FormControl
+                placeholder="Search room..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </InputGroup>
+          </div>
+
           {loading ? (
             <p>Loading...</p>
           ) : filteredBookings.length === 0 ? (
@@ -196,7 +198,10 @@ const UserBookings = () => {
                 {filteredBookings.map((b, index) => (
                   <tr
                     key={b.id}
-                    style={{ backgroundColor: index % 2 === 0 ? "#f8f9fa" : "white" }}
+                    style={{
+                      backgroundColor:
+                        index % 2 === 0 ? "#f8f9fa" : "white",
+                    }}
                   >
                     <td>{index + 1}</td>
                     <td>{b.roomName}</td>
@@ -208,18 +213,28 @@ const UserBookings = () => {
                         <Dropdown.Toggle
                           variant="link"
                           id={`dropdown-${b.id}`}
-                          style={{ textDecoration: "none", padding: 2, fontWeight: "bold" }}
+                          style={{
+                            textDecoration: "none",
+                            padding: 2,
+                            fontWeight: "bold",
+                          }}
                         >
                           ⋮
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                          <Dropdown.Item onClick={() => setSelectedBooking(b)}>
+                          <Dropdown.Item
+                            onClick={() => setSelectedBooking(b)}
+                          >
                             <FiInfo /> &nbsp;Detail
                           </Dropdown.Item>
-                          <Dropdown.Item onClick={() => handleEditClick(b)}>
+                          <Dropdown.Item
+                            onClick={() => handleEditClick(b)}
+                          >
                             <FiEdit /> &nbsp;Edit
                           </Dropdown.Item>
-                          <Dropdown.Item onClick={() => handleDelete(b.id)}>
+                          <Dropdown.Item
+                            onClick={() => handleDelete(b.id)}
+                          >
                             <FiTrash2 /> &nbsp;Delete
                           </Dropdown.Item>
                         </Dropdown.Menu>
@@ -232,7 +247,6 @@ const UserBookings = () => {
           )}
         </Col>
 
-        {/* Detail kanan */}
         <Col md={7}>
           <Card>
             <Card.Header>Booking Details</Card.Header>
@@ -240,15 +254,9 @@ const UserBookings = () => {
               {selectedBooking ? (
                 <Row>
                   <Col md={6}>
-                    <p>
-                      <strong>Room:</strong> {selectedBooking.roomName}
-                    </p>
-                    <p>
-                      <strong>Location:</strong> {selectedBooking.roomLocation}
-                    </p>
-                    <p>
-                      <strong>Capacity:</strong> {selectedBooking.roomCapacity} persons
-                    </p>
+                    <p><strong>Room:</strong> {selectedBooking.roomName}</p>
+                    <p><strong>Location:</strong> {selectedBooking.roomLocation}</p>
+                    <p><strong>Capacity:</strong> {selectedBooking.roomCapacity} persons</p>
                   </Col>
                   <Col md={6}>
                     <p>
@@ -269,14 +277,15 @@ const UserBookings = () => {
                   </Col>
                 </Row>
               ) : (
-                <p className="text-muted">Select a booking to view details.</p>
+                <p className="text-muted">
+                  Select a booking to view details.
+                </p>
               )}
             </Card.Body>
           </Card>
         </Col>
       </Row>
 
-      {/* Edit Modal */}
       {showEditModal && selectedBooking && (
         <div
           className="modal fade show d-block"
@@ -320,6 +329,7 @@ const UserBookings = () => {
                     </div>
                   </Col>
                 </Row>
+
                 <Row>
                   <Col md={6}>
                     <div className="mb-3">
@@ -350,13 +360,20 @@ const UserBookings = () => {
                 </Row>
               </div>
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={() => setShowEditModal(false)}>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowEditModal(false)}
+                >
                   Close
                 </button>
                 <button
                   className="btn btn-primary"
                   onClick={handleEditSubmit}
-                  disabled={!editData.borrowDate || !editData.returnDate || !editData.purpose}
+                  disabled={
+                    !editData.borrowDate ||
+                    !editData.returnDate ||
+                    !editData.purpose
+                  }
                 >
                   Save Changes
                 </button>

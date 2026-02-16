@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -22,6 +22,10 @@ const Navbar = () => {
         return "User Dashboard";
 
       case "/user/bookings":
+        return "Bookings";
+
+    case "/user/history":
+        return "History";
         return "My Bookings";
 
       default:
