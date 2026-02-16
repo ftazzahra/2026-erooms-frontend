@@ -4,26 +4,63 @@ import { useEffect, useState } from "react";
 const AdminDashboard = () => {
   const [username, setUsername] = useState("Admin");
 
+  const [totalRooms, setTotalRooms] = useState(0);
+  const [totalBookings, setTotalBookings] = useState(0);
+  const [pending, setPending] = useState(0);
+  const [approved, setApproved] = useState(0);
+  const [rejected, setRejected] = useState(0);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
+    // ===== GET USERNAME =====
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
-
         setUsername(
           payload[
             "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-          ] || "Admin",
+          ] || "Admin"
         );
       } catch {
         setUsername("Admin");
       }
     }
+
+    // ===== FETCH DASHBOARD DATA =====
+    const fetchData = async () => {
+      try {
+        const resRooms = await fetch(
+          "http://localhost:5006/api/Rooms",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const rooms = await resRooms.json();
+        setTotalRooms(rooms.length);
+
+        const resBookings = await fetch(
+          "http://localhost:5006/api/Bookings/admin",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const bookings = await resBookings.json();
+
+        setTotalBookings(bookings.length);
+        setPending(bookings.filter((b: any) => b.status === "Pending").length);
+        setApproved(bookings.filter((b: any) => b.status === "Approved").length);
+        setRejected(bookings.filter((b: any) => b.status === "Rejected").length);
+
+      } catch (err) {
+        console.error("Dashboard fetch error", err);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
     <DashboardLayout allowedRole="Admin">
+
       {/* ===== WELCOME CARD ===== */}
       <div
         className="card border-0 mb-4"
@@ -33,14 +70,19 @@ const AdminDashboard = () => {
         }}
       >
         <div className="card-body">
-          <h5 className="fw-bold mb-1">Hi {username}, welcome back</h5>
-          <small className="text-muted">Manage rooms and bookings here</small>
+          <h5 className="fw-bold mb-1">
+            Hi {username}, welcome back
+          </h5>
+          <small className="text-muted">
+            Manage rooms and bookings here
+          </small>
         </div>
       </div>
 
       {/* ===== ROW 1 ===== */}
-      <div className="row g-4 mb-2">
-        {/* Total Rooms */}
+      <div className="row g-4 mb-3">
+
+        {/* TOTAL ROOMS */}
         <div className="col-md-6">
           <div className="card shadow-sm border-0">
             <div className="card-body d-flex align-items-center">
@@ -61,13 +103,13 @@ const AdminDashboard = () => {
 
               <div>
                 <h6 className="text-muted mb-1">Total Rooms</h6>
-                <h4 className="fw-bold mb-0">25</h4>
+                <h4 className="fw-bold mb-0">{totalRooms}</h4>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Total Bookings */}
+        {/* TOTAL BOOKINGS */}
         <div className="col-md-6">
           <div className="card shadow-sm border-0">
             <div className="card-body d-flex align-items-center">
@@ -88,7 +130,7 @@ const AdminDashboard = () => {
 
               <div>
                 <h6 className="text-muted mb-1">Total Bookings</h6>
-                <h4 className="fw-bold mb-0">142</h4>
+                <h4 className="fw-bold mb-0">{totalBookings}</h4>
               </div>
             </div>
           </div>
@@ -96,8 +138,9 @@ const AdminDashboard = () => {
       </div>
 
       {/* ===== ROW 2 ===== */}
-      <div className="row mt-1 g-4">
-        {/* Pending */}
+      <div className="row g-4">
+
+        {/* PENDING */}
         <div className="col-md-4">
           <div className="card shadow-sm border-0">
             <div className="card-body d-flex align-items-center">
@@ -117,14 +160,14 @@ const AdminDashboard = () => {
               </div>
 
               <div>
-                <h6 className="text-muted mb-1">Pending Rooms</h6>
-                <h4 className="fw-bold mb-0">18</h4>
+                <h6 className="text-muted mb-1">Pending Bookings</h6>
+                <h4 className="fw-bold mb-0">{pending}</h4>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Approved */}
+        {/* APPROVED */}
         <div className="col-md-4">
           <div className="card shadow-sm border-0">
             <div className="card-body d-flex align-items-center">
@@ -144,14 +187,14 @@ const AdminDashboard = () => {
               </div>
 
               <div>
-                <h6 className="text-muted mb-1">Approved Rooms</h6>
-                <h4 className="fw-bold mb-0">96</h4>
+                <h6 className="text-muted mb-1">Approved Bookings</h6>
+                <h4 className="fw-bold mb-0">{approved}</h4>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Rejected */}
+        {/* REJECTED */}
         <div className="col-md-4">
           <div className="card shadow-sm border-0">
             <div className="card-body d-flex align-items-center">
@@ -171,13 +214,15 @@ const AdminDashboard = () => {
               </div>
 
               <div>
-                <h6 className="text-muted mb-1">Rejected Rooms</h6>
-                <h4 className="fw-bold mb-0">28</h4>
+                <h6 className="text-muted mb-1">Rejected Bookings</h6>
+                <h4 className="fw-bold mb-0">{rejected}</h4>
               </div>
             </div>
           </div>
         </div>
+
       </div>
+
     </DashboardLayout>
   );
 };
