@@ -26,6 +26,7 @@ const Navbar = () => {
 
     case "/user/history":
         return "History";
+        return "My Bookings";
 
       default:
         return "Dashboard";
@@ -39,7 +40,9 @@ const Navbar = () => {
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-white shadow-sm px-4">
-      <span className="navbar-brand mb-0 h5">Dashboard</span>
+      <span className="navbar-brand mb-0 h5 fw-bold">
+        {getTitle()}
+      </span>
 
       <div className="ms-auto">
         <button
