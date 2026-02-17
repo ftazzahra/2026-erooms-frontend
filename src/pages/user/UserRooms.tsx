@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/layouts/DashboardLayout";
 import {
   InputGroup,
@@ -36,25 +35,28 @@ const UserRooms = () => {
   const [purpose, setPurpose] = useState("");
   const [username, setUsername] = useState("User");
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     const fetchRooms = async () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) return;
 
-        try {
-          const payload = JSON.parse(atob(token.split(".")[1]));
-          setUsername(
-            payload[
-              "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-            ] || "User"
-          );
-        } catch {
+        // get username from api
+        const profileRes = await fetch(
+          "http://localhost:5006/api/users/me",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (profileRes.ok) {
+          const profile = await profileRes.json();
+          setUsername(profile.username);
+        } else {
           setUsername("User");
         }
 
+        // fetch rooms
         const res = await fetch("http://localhost:5006/api/Rooms", {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -111,7 +113,6 @@ const UserRooms = () => {
     }
   };
 
-  // FILTER
   const filteredRooms = rooms.filter((room) => {
     const matchesSearch =
       room.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -129,7 +130,6 @@ const UserRooms = () => {
 
   return (
     <DashboardLayout allowedRole="User">
-      {/* HEADER + DESCRIPTION */}
       <div
         className="mb-3 p-3 rounded"
         style={{
@@ -141,7 +141,6 @@ const UserRooms = () => {
         <em>Browse available rooms and request a loan.</em>
       </div>
 
-      {/* SEARCH + FILTER */}
       <Row className="mb-3 align-items-center">
         <Col md={8}>
           <InputGroup>
@@ -154,7 +153,6 @@ const UserRooms = () => {
           </InputGroup>
         </Col>
 
-        {/* ✅ FILTER DIGANTI DI SINI SAJA */}
         <Col md={4}>
           <select
             className="form-select"
@@ -172,7 +170,6 @@ const UserRooms = () => {
         </Col>
       </Row>
 
-      {/* TABLE */}
       <div className="table-responsive shadow rounded overflow-hidden">
         <table className="table align-middle mb-0">
           <thead>
@@ -251,7 +248,6 @@ const UserRooms = () => {
         </table>
       </div>
 
-      {/* MODAL (TIDAK DIUBAH) */}
       {showModal && selectedRoom && (
         <div
           className="modal fade show d-block"

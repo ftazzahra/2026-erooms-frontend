@@ -15,8 +15,9 @@ interface Booking {
 const UserHistory = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] =
-    useState<"All" | "Approved" | "Rejected">("All");
+  const [statusFilter, setStatusFilter] = useState<
+    "All" | "Approved" | "Rejected"
+  >("All");
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -53,7 +54,6 @@ const UserHistory = () => {
 
   return (
     <DashboardLayout allowedRole="User">
-      {/* HEADER + DESCRIPTION */}
       <div
         className="mb-3 p-3 rounded"
         style={{
@@ -65,7 +65,6 @@ const UserHistory = () => {
         <em>View all your approved and rejected room bookings.</em>
       </div>
 
-      {/* SEARCH + FILTER (SAMA PERSIS SEPERTI USERROOMS) */}
       <Row className="mb-3 align-items-center">
         <Col md={8}>
           <InputGroup>
@@ -83,9 +82,7 @@ const UserHistory = () => {
             className="form-select"
             value={statusFilter}
             onChange={(e) =>
-              setStatusFilter(
-                e.target.value as "All" | "Approved" | "Rejected"
-              )
+              setStatusFilter(e.target.value as "All" | "Approved" | "Rejected")
             }
           >
             <option value="All">All</option>
@@ -95,7 +92,6 @@ const UserHistory = () => {
         </Col>
       </Row>
 
-      {/* TABLE */}
       <div className="table-responsive shadow rounded overflow-hidden">
         <table className="table align-middle mb-0">
           <thead style={{ backgroundColor: "#0b3a82", color: "white" }}>
@@ -115,29 +111,20 @@ const UserHistory = () => {
                 <tr
                   key={booking.id}
                   style={{
-                    backgroundColor:
-                      index % 2 === 0 ? "#f8f9fa" : "white",
+                    backgroundColor: index % 2 === 0 ? "#f8f9fa" : "white",
                   }}
                 >
                   <td>{index + 1}</td>
                   <td className="fw-semibold">{booking.roomName}</td>
                   <td>{booking.roomLocation}</td>
-                  <td>
-                    {new Date(booking.borrowDate).toLocaleDateString()}
-                  </td>
-                  <td>
-                    {new Date(booking.returnDate).toLocaleDateString()}
-                  </td>
+                  <td>{new Date(booking.borrowDate).toLocaleDateString()}</td>
+                  <td>{new Date(booking.returnDate).toLocaleDateString()}</td>
                   <td>{booking.purpose}</td>
                   <td>
                     {booking.status === "Approved" ? (
-                      <span className="badge bg-success">
-                        {booking.status}
-                      </span>
+                      <span className="badge bg-success">{booking.status}</span>
                     ) : (
-                      <span className="badge bg-danger">
-                        {booking.status}
-                      </span>
+                      <span className="badge bg-danger">{booking.status}</span>
                     )}
                   </td>
                 </tr>

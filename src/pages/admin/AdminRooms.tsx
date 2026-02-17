@@ -16,14 +16,7 @@ import {
   Toast,
   ToastContainer,
 } from "react-bootstrap";
-import {
-  FaEdit,
-  FaTrash,
-  FaPlus,
-  FaSearch,
-  FaArrowUp,
-  FaArrowDown,
-} from "react-icons/fa";
+import { FaEdit, FaTrash, FaPlus, FaSearch } from "react-icons/fa";
 
 interface Room {
   id: number;
@@ -38,17 +31,15 @@ const AdminRooms = () => {
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] =
-    useState<"All" | "Available" | "Not Available">("All");
+  const [filterStatus, setFilterStatus] = useState<
+    "All" | "Available" | "Not Available"
+  >("All");
 
-  const [sortField, setSortField] =
-    useState<keyof Room | "none">("none");
-  const [sortOrder, setSortOrder] =
-    useState<"asc" | "desc">("asc");
+  const [sortField, setSortField] = useState<keyof Room | "none">("none");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const [showModal, setShowModal] = useState(false);
-  const [editingRoom, setEditingRoom] =
-    useState<Room | null>(null);
+  const [editingRoom, setEditingRoom] = useState<Room | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -57,18 +48,17 @@ const AdminRooms = () => {
     isAvailable: true,
   });
 
-  // ✅ ERROR STATE
   const [errors, setErrors] = useState({
     name: "",
     location: "",
     capacity: "",
   });
 
-  // ✅ TOAST SUCCESS
+  // success toast
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
-  // ===== FETCH =====
+  // fetch rooms data
   const fetchRooms = async () => {
     try {
       setLoading(true);
@@ -92,7 +82,7 @@ const AdminRooms = () => {
     fetchRooms();
   }, []);
 
-  // ===== FILTER =====
+  // filter
   const filteredRooms = rooms.filter((r) => {
     const matchSearch =
       r.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -106,7 +96,7 @@ const AdminRooms = () => {
     return matchSearch && matchStatus;
   });
 
-  // ===== SORT =====
+  // sorting
   const sortedRooms = [...filteredRooms].sort((a, b) => {
     if (sortField === "none") return 0;
 
@@ -130,7 +120,7 @@ const AdminRooms = () => {
     }
   };
 
-  // ===== OPEN MODAL =====
+  // modal
   const handleOpenModal = (room?: Room) => {
     if (room) {
       setEditingRoom(room);
@@ -155,7 +145,6 @@ const AdminRooms = () => {
     setShowModal(true);
   };
 
-  // ===== SUBMIT =====
   const handleSubmit = async () => {
     const newErrors = {
       name: "",
@@ -163,11 +152,9 @@ const AdminRooms = () => {
       capacity: "",
     };
 
-    if (!formData.name.trim())
-      newErrors.name = "Room name is required";
+    if (!formData.name.trim()) newErrors.name = "Room name is required";
 
-    if (!formData.location.trim())
-      newErrors.location = "Location is required";
+    if (!formData.location.trim()) newErrors.location = "Location is required";
 
     if (formData.capacity <= 0)
       newErrors.capacity = "Capacity must be at least 1";
@@ -200,12 +187,9 @@ const AdminRooms = () => {
       fetchRooms();
 
       setToastMessage(
-        editingRoom
-          ? "Room updated successfully!"
-          : "Room added successfully!"
+        editingRoom ? "Room updated successfully!" : "Room added successfully!",
       );
       setShowToast(true);
-
     } catch (err) {
       alert("Error saving room");
     }
@@ -228,10 +212,8 @@ const AdminRooms = () => {
     setShowToast(true);
   };
 
-  // ===== UI =====
   return (
     <DashboardLayout allowedRole="Admin">
-
       <Card
         className="mb-3 p-3"
         style={{
@@ -244,7 +226,7 @@ const AdminRooms = () => {
         <em>Manage rooms and availability.</em>
       </Card>
 
-      {/* SEARCH + FILTER */}
+      {/* search n filter */}
       <Row className="mb-3 align-items-center">
         <Col md={6}>
           <InputGroup>
@@ -278,7 +260,6 @@ const AdminRooms = () => {
         </Col>
       </Row>
 
-      {/* TABLE */}
       <div className="table-responsive shadow rounded overflow-hidden">
         <Table striped bordered hover>
           <thead className="bg-primary text-white">
@@ -293,10 +274,10 @@ const AdminRooms = () => {
                     {col === "id"
                       ? ""
                       : col === "isAvailable"
-                      ? "Status"
-                      : col.charAt(0).toUpperCase() + col.slice(1)}
+                        ? "Status"
+                        : col.charAt(0).toUpperCase() + col.slice(1)}
                   </th>
-                )
+                ),
               )}
               <th className="text-center">Actions</th>
             </tr>
@@ -347,7 +328,7 @@ const AdminRooms = () => {
                         variant="danger"
                         size="sm"
                         onClick={() => handleDelete(room)}
-                         style={{
+                        style={{
                           borderRadius: "100%",
                           width: 28,
                           height: 28,
@@ -368,24 +349,25 @@ const AdminRooms = () => {
         </Table>
       </div>
 
-      {/* TOAST */}
       <ToastContainer position="top-end" className="p-3">
-        <Toast show={showToast} onClose={() => setShowToast(false)} autohide delay={2500} bg="success">
+        <Toast
+          show={showToast}
+          onClose={() => setShowToast(false)}
+          autohide
+          delay={2500}
+          bg="success"
+        >
           <Toast.Body className="text-white">{toastMessage}</Toast.Body>
         </Toast>
       </ToastContainer>
 
-      {/* MODAL */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>
-            {editingRoom ? "Edit Room" : "Add Room"}
-          </Modal.Title>
+          <Modal.Title>{editingRoom ? "Edit Room" : "Add Room"}</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <Form>
-
             <Form.Group className="mb-3">
               <Form.Label>Room Name *</Form.Label>
               <Form.Control
@@ -448,7 +430,6 @@ const AdminRooms = () => {
                 <option value="no">Not Available</option>
               </Form.Select>
             </Form.Group>
-
           </Form>
         </Modal.Body>
 
@@ -461,7 +442,6 @@ const AdminRooms = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
     </DashboardLayout>
   );
 };

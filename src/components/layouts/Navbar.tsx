@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -8,34 +8,27 @@ const Navbar = () => {
     switch (location.pathname) {
       case "/admin/dashboard":
         return "Dashboard";
-
       case "/admin/rooms":
         return "Rooms";
-
       case "/admin/bookings":
         return "Bookings";
-
       case "/admin/history":
         return "History";
-
       case "/user/dashboard":
         return "User Dashboard";
-
       case "/user/bookings":
         return "Bookings";
-
-    case "/user/history":
+      case "/user/history":
         return "History";
-        return "My Bookings";
-
+      case "/profile":
+        return "My Profile";
       default:
         return "Dashboard";
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login", { replace: true });
+  const handleProfileClick = () => {
+    navigate("/profile");
   };
 
   return (
@@ -46,10 +39,18 @@ const Navbar = () => {
 
       <div className="ms-auto">
         <button
-          className="btn btn-outline-warning fw-semibold"
-          onClick={handleLogout}
+        className="btn border-0 rounded-circle d-flex align-items-center justify-content-center"
+        onClick={handleProfileClick}
+        style={{
+            width: "40px",
+            height: "40px",
+            backgroundColor: "#fff3cd", 
+        }}
         >
-          Logout
+        <i
+            className="bi bi-person-fill"
+            style={{ color: "#b8860b", fontSize: "18px" }} 
+        ></i>
         </button>
       </div>
     </nav>
