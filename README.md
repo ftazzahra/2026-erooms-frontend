@@ -81,9 +81,6 @@ http://localhost:5173
 ├── public/
 ├── src/
 │   ├── assets/
-│   │   ├── img_landing.png
-│   │   ├── logo.png
-│   │   └── react.svg
 │   │
 │   ├── components/
 │   │   ├── layouts/
