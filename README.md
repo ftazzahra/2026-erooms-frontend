@@ -1,73 +1,152 @@
-# React + TypeScript + Vite
+# E-Rooms Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend application for the E-Rooms Room Booking System built using React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📌 Project Overview
 
-## React Compiler
+E-Rooms is a web-based room booking management system that allows:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Users to browse available rooms and make reservations
+- Users to view booking history
+- Admins to manage rooms and bookings
+- Role-based dashboard access (Admin & User)
 
-## Expanding the ESLint configuration
+This frontend application connects to the E-Rooms Backend API.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🚀 Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- React
+- TypeScript
+- Vite
+- React Router DOM
+- Bootstrap 5
+- Bootstrap Icons
+- Axios
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/ftazzahra/2026-erooms-frontend.git
+cd 2026-erooms-frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 2️⃣ Install Dependencies
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+If needed, manually install required packages:
+
+```bash
+npm install react-router-dom
+npm install bootstrap
+npm install bootstrap-icons
+npm install axios
+```
+
+---
+
+### 3️⃣ Setup Environment Variables
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` if necessary.
+
+---
+
+### 4️⃣ Run Development Server
+
+```bash
+npm run dev
+```
+
+Application runs on:
+
+```
+http://localhost:5173
+```
+
+---
+
+## 🔐 Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| VITE_API_BASE_URL | Backend API base URL |
+| VITE_API_TIMEOUT | API request timeout |
+| VITE_APP_ENV | Application environment |
+| VITE_AUTH_TOKEN_KEY | Key for storing authentication token |
+
+---
+
+## 📂 Project Structure
+
+```
+2026-EROOMS-FRONTEND
+│
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   │   ├── css/
+│   │   ├── layouts/
+│   │   └── ProtectedRoute.tsx
+│   │
+│   ├── pages/
+│   │   ├── admin/
+│   │   ├── user/
+│   │   ├── Landing.tsx
+│   │   ├── Login.tsx
+│   │   ├── Profile.tsx
+│   │   └── Register.tsx
+│   │
+│   ├── services/
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── App.css
+│   └── index.css
+│
+├── .env.example
+├── CHANGELOG.md
+├── LICENSE
+├── package.json
+└── vite.config.ts
+```
+
+---
+
+## 🔒 Features
+
+- Authentication (Login & Register)
+- Role-based access control (Admin & User)
+- Admin Room Management
+- Admin Booking Management
+- User Room Browsing
+- User Booking History
+- Profile Page
+- Protected Routes
+
+---
+
+## 📜 License
+
+This project is licensed under the [MIT License](./LICENSE).
+
+---
+
+## 📝 Changelog
+
+All notable changes are documented in the [CHANGELOG](./CHANGELOG.md).
