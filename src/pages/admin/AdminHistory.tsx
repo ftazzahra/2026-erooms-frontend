@@ -37,7 +37,7 @@ const AdminHistory = () => {
   const [sortField, setSortField] = useState<keyof Booking | "none">("none");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  // fetch data
+  // fetch data bookings
   const fetchHistory = async () => {
     try {
       setLoading(true);
@@ -67,7 +67,7 @@ const AdminHistory = () => {
     fetchHistory();
   }, []);
 
-  // ================= SORT =================
+  // sorting
   const handleSort = (field: keyof Booking) => {
     if (sortField === field) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -164,7 +164,7 @@ const AdminHistory = () => {
         </Row>
       </Card>
 
-        {/* ===== yllow info card ===== */}
+        {/* yellow info card */}
       <Card
         className="mb-3 p-3"
         style={{
@@ -217,7 +217,7 @@ const AdminHistory = () => {
         </Col>
       </Row>
 
-      {/* TABLE */}
+
       <div className="table-responsive shadow rounded overflow-hidden">
         <Table striped bordered hover>
           <thead className="bg-primary text-white">

@@ -53,13 +53,12 @@ const AdminBookings = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
-  // ✅ TOAST STATE
   const [toast, setToast] = useState({
     show: false,
     message: "",
   });
 
-  // ===== Fetch bookings =====
+  // fetch bookings data
   const fetchBookings = async () => {
     try {
       setLoading(true);
@@ -81,7 +80,7 @@ const AdminBookings = () => {
     fetchBookings();
   }, []);
 
-  // ===== Update status =====
+  // update status
   const handleUpdateStatus = async (
     bookingId: number,
     status: "Approved" | "Rejected"
@@ -109,7 +108,7 @@ const AdminBookings = () => {
 
       if (!res.ok) throw new Error("Failed to update status");
 
-      // ✅ SHOW SUCCESS TOAST
+      // succest toast
       setToast({
         show: true,
         message: `Booking ${status} successfully`,
@@ -127,7 +126,7 @@ const AdminBookings = () => {
     setShowDetailModal(true);
   };
 
-  // ===== Filter & Search =====
+  // fitler n search
   const filteredBookings = bookings.filter((b) => {
     const matchSearch =
       b.userName.toLowerCase().includes(search.toLowerCase()) ||
@@ -138,7 +137,7 @@ const AdminBookings = () => {
     return matchSearch && matchStatus;
   });
 
-  // ===== Sorting =====
+  // sorting
   const sortedBookings = [...filteredBookings].sort((a, b) => {
     if (sortField === "none") return 0;
 
@@ -171,7 +170,7 @@ const AdminBookings = () => {
   return (
     <DashboardLayout allowedRole="Admin">
 
-      {/* ===== blue info card ===== */}
+      {/* blue card */}
       <Card
         className="mb-2 p-3"
         style={{
@@ -187,7 +186,7 @@ const AdminBookings = () => {
         </em>
       </Card>
 
-      {/* ===== yllow info card ===== */}
+      {/* yllow info card  */}
       <Card
         className="mb-3 p-3"
         style={{
@@ -209,7 +208,7 @@ const AdminBookings = () => {
         </em>
       </Card>
 
-      {/* ===== filter dan search ===== */}
+      {/* filter n search*/}
       <Row className="mb-3 align-items-center">
         <Col md={8}>
           <InputGroup>
@@ -244,7 +243,7 @@ const AdminBookings = () => {
         </Col>
       </Row>
 
-      {/* ===== table ===== */}
+
       <div className="table-responsive shadow rounded overflow-hidden">
         <Table striped bordered hover>
           <thead className="bg-primary text-white">

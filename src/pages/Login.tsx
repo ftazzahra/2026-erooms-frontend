@@ -13,42 +13,38 @@ const Login = () => {
   const decodeRole = (token: string) => {
     const payload = JSON.parse(atob(token.split(".")[1]));
     return (
-      payload[
-        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-      ] || payload.role
+      payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
+      payload.role
     );
   };
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-        try {
-            const data = await login(username, password);
+    try {
+      const data = await login(username, password);
 
-            if (!data?.token) {
-            throw new Error("Token not found");
-            }
+      if (!data?.token) {
+        throw new Error("Token not found");
+      }
 
-            localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.token);
 
-            const role = decodeRole(data.token);
+      const role = decodeRole(data.token);
 
-            // 🔥 ROUTE FINAL
-            if (role === "Admin") {
-            navigate("/admin/dashboard");
-            } else {
-            navigate("/user/dashboard");
-            }
-
-        } catch (err: any) {
-            setError(err.message || "Username or Password incorrect");
-        } finally {
-            setLoading(false);
-        }
-        };
-
+      if (role === "Admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/user/dashboard");
+      }
+    } catch (err: any) {
+      setError(err.message || "Username or Password incorrect");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section
@@ -61,7 +57,6 @@ const Login = () => {
         <div className="row justify-content-center">
           <div className="col-md-5 col-lg-4">
             <div className="card shadow-lg border-0 rounded-4">
-
               <div
                 className="card-header text-center text-white rounded-top-4"
                 style={{ backgroundColor: "#133aa7" }}
@@ -70,7 +65,6 @@ const Login = () => {
               </div>
 
               <div className="card-body">
-
                 {error && (
                   <div className="alert alert-danger text-center py-2">
                     {error}
@@ -78,11 +72,8 @@ const Login = () => {
                 )}
 
                 <form onSubmit={handleLogin}>
-
                   <div className="mb-3">
-                    <label className="form-label fw-semibold">
-                      Username
-                    </label>
+                    <label className="form-label fw-semibold">Username</label>
                     <input
                       type="text"
                       className="form-control rounded-3"
@@ -93,9 +84,7 @@ const Login = () => {
                   </div>
 
                   <div className="mb-4">
-                    <label className="form-label fw-semibold">
-                      Password
-                    </label>
+                    <label className="form-label fw-semibold">Password</label>
                     <input
                       type="password"
                       className="form-control rounded-3"
@@ -116,7 +105,6 @@ const Login = () => {
                   >
                     {loading ? "Loading..." : "Login"}
                   </button>
-
                 </form>
               </div>
 
@@ -132,7 +120,6 @@ const Login = () => {
               <div className="card-footer text-center small text-muted">
                 © 2026 PENS Room Booking
               </div>
-
             </div>
           </div>
         </div>

@@ -47,7 +47,6 @@ const Register = () => {
         <div className="row justify-content-center">
           <div className="col-md-5 col-lg-4">
             <div className="card shadow-lg border-0 rounded-4">
-
               <div
                 className="card-header text-center text-white rounded-top-4"
                 style={{ backgroundColor: "#133aa7" }}
@@ -56,7 +55,6 @@ const Register = () => {
               </div>
 
               <div className="card-body">
-
                 {error && (
                   <div className="alert alert-danger text-center py-2">
                     {error}
@@ -64,11 +62,8 @@ const Register = () => {
                 )}
 
                 <form onSubmit={handleRegister}>
-
                   <div className="mb-1">
-                    <label className="form-label fw-semibold">
-                      Username
-                    </label>
+                    <label className="form-label fw-semibold">Username</label>
                     <input
                       type="text"
                       className="form-control rounded-3"
@@ -79,15 +74,13 @@ const Register = () => {
                   </div>
 
                   <div className="mb-3 mt-3">
-                    <label className="form-label fw-semibold">
-                      Password
-                    </label>
+                    <label className="form-label fw-semibold">Password</label>
                     <input
-                        type="password"
-                        className="form-control rounded-3"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
+                      type="password"
+                      className="form-control rounded-3"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
                     />
                   </div>
 
@@ -96,11 +89,11 @@ const Register = () => {
                       Confirm Password
                     </label>
                     <input
-                        type="password"
-                        className="form-control rounded-3"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
+                      type="password"
+                      className="form-control rounded-3"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
                     />
                   </div>
 
@@ -115,7 +108,6 @@ const Register = () => {
                   >
                     {loading ? "Registering..." : "Register"}
                   </button>
-
                 </form>
               </div>
 
@@ -131,7 +123,6 @@ const Register = () => {
               <div className="card-footer text-center small text-muted mt-3">
                 © 2026 PENS Room Booking
               </div>
-
             </div>
           </div>
         </div>

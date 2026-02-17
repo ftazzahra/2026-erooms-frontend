@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import logo from "../../assets/logo.png";
 
@@ -8,11 +8,11 @@ interface Props {
 
 const Sidebar = ({ role }: Props) => {
   const location = useLocation();
-
+  const navigate = useNavigate(); // untuk logout
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState("");
 
-  // Prefix path sesuai role
+  // prefix path sesuai role
   const prefix = role === "Admin" ? "/admin" : "/user";
 
   const isActive = (path: string) =>
@@ -41,10 +41,16 @@ const Sidebar = ({ role }: Props) => {
     },
   ];
 
-  // ===== FILTER SEARCH =====
+  // Filter menu
   const filteredMenus = menuItems.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  // logout handler
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login", { replace: true });
+  };
 
   return (
     <div
@@ -55,24 +61,16 @@ const Sidebar = ({ role }: Props) => {
         transition: "0.3s",
       }}
     >
-      {/* ===== Brand + Toggle ===== */}
+      {/* logo */}
       <div className="d-flex align-items-center mb-4 justify-content-between">
-        
         <div className="d-flex align-items-center">
           <img
             src={logo}
             alt="eRooms Logo"
-            style={{
-              width: "42px",
-              height: "42px",
-              objectFit: "contain",
-            }}
+            style={{ width: "42px", height: "42px", objectFit: "contain" }}
             className="me-2"
           />
-
-          {!collapsed && (
-            <span className="fs-5 fw-bold">erooms</span>
-          )}
+          {!collapsed && <span className="fs-5 fw-bold">erooms</span>}
         </div>
 
         <i
@@ -82,14 +80,13 @@ const Sidebar = ({ role }: Props) => {
         ></i>
       </div>
 
-      {/* ===== Search ===== */}
+      {/* search */}
       {!collapsed && (
         <div className="mb-4">
           <div className="input-group">
             <span className="input-group-text bg-light border-0">
               <i className="bi bi-search text-muted"></i>
             </span>
-
             <input
               type="text"
               className="form-control bg-light border-0"
@@ -101,31 +98,48 @@ const Sidebar = ({ role }: Props) => {
         </div>
       )}
 
-      {/* ===== Menu ===== */}
+      {/* menu */}
       <ul className="nav nav-pills flex-column mb-auto">
-
         {filteredMenus.length === 0 && !collapsed && (
-          <span className="text-muted small px-2">
-            Menu tidak ditemukan
-          </span>
+          <span className="text-muted small px-2">Menu tidak ditemukan</span>
         )}
 
         {filteredMenus.map((item) => (
           <li key={item.name} className="nav-item mb-1">
             <Link
               to={item.path}
-              className={`nav-link d-flex align-items-center ${isActive(item.path)}`}
+              className={`nav-link d-flex align-items-center ${isActive(
+                item.path
+              )}`}
             >
               <i className={`bi ${item.icon} fs-5`}></i>
-
-              {!collapsed && (
-                <span className="ms-2">{item.name}</span>
-              )}
+              {!collapsed && <span className="ms-2">{item.name}</span>}
             </Link>
           </li>
         ))}
-
       </ul>
+
+      {/* logout button */}
+      <div className="mt-auto">
+        <button
+          className="btn btn-danger w-100 d-flex align-items-center"
+          onClick={handleLogout}
+          style={{ padding: "0.75rem" }} // samakan padding menu
+        >
+          <span
+            className="d-flex align-items-center justify-content-center me-2"
+            style={{
+              width: 24,
+              height: 24,
+              borderRadius: "50%",
+              color: "#fff",
+            }}
+          >
+            <i className="bi bi-box-arrow-left"></i>
+          </span>
+          {!collapsed && <span>Logout</span>}
+        </button>
+      </div>
     </div>
   );
 };

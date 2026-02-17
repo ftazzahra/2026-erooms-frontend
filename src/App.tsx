@@ -16,17 +16,19 @@ import AdminHistory from "./pages/admin/AdminHistory";
 import UserHistory from "./pages/user/UserHistory";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import Profile from "./pages/Profile";
 
 
 function App() {
   return (
     <Routes>
-      {/* PUBLIC */}
+      {/* public */}
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/profile" element={<Profile />} />
 
-      {/* ================= ADMIN ================= */}
+      {/* admin */}
       <Route
         path="/admin/dashboard"
         element={
@@ -63,7 +65,7 @@ function App() {
         }
       />
 
-      {/* ================= USER ================= */}
+      {/* user */}
       <Route
         path="/user/dashboard"
         element={

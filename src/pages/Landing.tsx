@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import roomImage from "../assets/img_landing.png";
 
-
 const Landing: React.FC = () => {
   const navigate = useNavigate();
 
@@ -10,7 +9,6 @@ const Landing: React.FC = () => {
       <div className="container">
         <div className="row align-items-center">
 
-          {/* LEFT */}
           <div className="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
             <h1 className="display-4 fw-bold">
               Book Rooms <br />
@@ -18,11 +16,9 @@ const Landing: React.FC = () => {
             </h1>
 
             <p className="lead mt-3">
-              Sistem Peminjaman Ruangan Kampus yang memudahkan mahasiswa 
-              dan staff dalam melakukan reservasi ruangan secara cepat 
-              dan efisien.
+              Sistem Peminjaman Ruangan Kampus yang memudahkan mahasiswa dan
+              staff dalam melakukan reservasi ruangan secara cepat dan efisien.
             </p>
-
             <button
               className="btn btn-outline-warning btn-lg mt-3"
               onClick={() => navigate("/login")}
@@ -31,7 +27,6 @@ const Landing: React.FC = () => {
             </button>
           </div>
 
-          {/* RIGHT */}
           <div className="col-lg-6 text-center">
             <img src={roomImage} alt="Landing" className="img-fluid" />
           </div>
