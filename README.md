@@ -86,7 +86,6 @@ http://localhost:5173
 │   │   └── react.svg
 │   │
 │   ├── components/
-│   │   ├── css/
 │   │   ├── layouts/
 │   │   └── ProtectedRoute.tsx
 │   │
