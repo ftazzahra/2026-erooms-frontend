@@ -4,7 +4,7 @@ Frontend application for the E-Rooms Room Booking System built using React, Type
 
 ---
 
-## 📌 Project Overview
+## Project Overview
 
 E-Rooms is a web-based room booking management system that allows:
 
@@ -17,57 +17,38 @@ This frontend application connects to the E-Rooms Backend API.
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
 - React
 - TypeScript
 - Vite
-- React Router DOM
-- Bootstrap 5
-- Bootstrap Icons
+- React Router
 - Axios
 
 ---
 
-## ⚙️ Installation & Setup
+## Installation & Setup
 
-### 1️⃣ Clone Repository
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/ftazzahra/2026-erooms-frontend.git
 cd 2026-erooms-frontend
 ```
 
----
-
-### 2️⃣ Install Dependencies
+2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-If needed, manually install required packages:
-
-```bash
-npm install react-router-dom
-npm install bootstrap
-npm install bootstrap-icons
-npm install axios
-```
-
----
-
-### 3️⃣ Setup Environment Variables
+3. Setup environment variables:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` if necessary.
-
----
-
-### 4️⃣ Run Development Server
+4. Run development server:
 
 ```bash
 npm run dev
@@ -81,7 +62,7 @@ http://localhost:5173
 
 ---
 
-## 🔐 Environment Variables
+## Environment Variables
 
 | Variable | Description |
 |----------|-------------|
@@ -92,7 +73,7 @@ http://localhost:5173
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 2026-EROOMS-FRONTEND
@@ -100,8 +81,8 @@ http://localhost:5173
 ├── public/
 ├── src/
 │   ├── assets/
+│   │
 │   ├── components/
-│   │   ├── css/
 │   │   ├── layouts/
 │   │   └── ProtectedRoute.tsx
 │   │
@@ -123,12 +104,13 @@ http://localhost:5173
 ├── CHANGELOG.md
 ├── LICENSE
 ├── package.json
+├── tsconfig.json
 └── vite.config.ts
 ```
 
 ---
 
-## 🔒 Features
+## Features
 
 - Authentication (Login & Register)
 - Role-based access control (Admin & User)
@@ -141,12 +123,13 @@ http://localhost:5173
 
 ---
 
-## 📜 License
+## License
 
-This project is licensed under the [MIT License](./LICENSE).
+This project is licensed under the MIT License.  
+See the [MIT License](./LICENSE) for more details.
 
 ---
 
-## 📝 Changelog
+## Changelog
 
 All notable changes are documented in the [CHANGELOG](./CHANGELOG.md).
